@@ -29,6 +29,7 @@ module.exports = (sequelize) => {
   Quadro.associate = function(models) {
     Quadro.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Quadro.hasMany(models.Disjuntor, { foreignKey: 'quadroId' });
+    Quadro.hasMany(models.Dps, { foreignKey: 'quadroId' });
   };
 
   return Quadro;

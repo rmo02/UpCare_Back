@@ -8,6 +8,8 @@ const userRoutes = require('./routes/userRoutes');
 const createRoles = require('./seeders/createRoles');
 const estacaoRoutes = require('./routes/estacaoRoutes');
 const arcondicionadoRoutes = require('./routes/arcondicionadoRoutes');
+const disjuntorRoutes = require('./routes/disjuntorRoutes');
+const dpsRoutes = require('./routes/dpsRoutes');
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api/estacoes', estacaoRoutes);
 app.use('/api/arcondicionado', arcondicionadoRoutes);
+app.use('/api/disjuntor', disjuntorRoutes);
+app.use('/api/dps', dpsRoutes);
 
 const PORT = process.env.PORT || 3000;
 

@@ -37,6 +37,13 @@ module.exports = (sequelize, DataTypes) => {
     Estacao.hasMany(models.Arcondicionado, { foreignKey: 'estacaoId' });
     Estacao.hasMany(models.Quadro, { foreignKey: 'estacaoId' });
     Estacao.hasMany(models.Disjuntor, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Dps, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Cabo, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Combinador, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Exaustor, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Switch, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Telemetria, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.Torre, { foreignKey: 'estacaoId' });
   };
 
   return Estacao;
