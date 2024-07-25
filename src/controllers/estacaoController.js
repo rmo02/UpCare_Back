@@ -1,4 +1,4 @@
-const { Estacao, Arcondicionado, Disjuntor, Quadro } = require('../models');
+const { Estacao, Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor } = require('../models');
 
 // Create a new Estacao
 exports.createEstacao = async (req, res) => {
@@ -16,7 +16,7 @@ exports.getAllEstacoes = async (req, res) => {
   try {
     const estacoes = await Estacao.findAll({
       include: [
-        Arcondicionado, Quadro, Disjuntor
+        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor
       ]
     });
     res.status(200).json(estacoes);
@@ -31,7 +31,7 @@ exports.getEstacaoById = async (req, res) => {
   try {
     const estacao = await Estacao.findByPk(id, {
       include: [
-        Arcondicionado, Quadro, Disjuntor
+        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor
       ]
     });
     if (!estacao) {

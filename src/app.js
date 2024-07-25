@@ -2,20 +2,32 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { sequelize } = require('./models');
 
-//IMPORT ROTAS
+// IMPORT ROTAS
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const createRoles = require('./seeders/createRoles');
 const estacaoRoutes = require('./routes/estacaoRoutes');
+const antenaRoutes = require('./routes/antenaRoutes');
 const arcondicionadoRoutes = require('./routes/arcondicionadoRoutes');
+const combinadorRoutes = require('./routes/combinadorRoutes');
 const disjuntorRoutes = require('./routes/disjuntorRoutes');
 const dpsRoutes = require('./routes/dpsRoutes');
+const exaustorRoutes = require('./routes/exaustorRoutes');
+const nobreakRoutes = require('./routes/nobreakRoutes');
+const parabolicaRoutes = require('./routes/parabolicaRoutes');
+const quadroRoutes = require('./routes/quadroRoutes');
+const receptorRoutes = require('./routes/receptorRoutes');
+const switchRoutes = require('./routes/switchRoutes');
+const telemetriaRoutes = require('./routes/telemetriaRoutes');
+const torreRoutes = require('./routes/torreRoutes');
+const transmissorRoutes = require('./routes/transmissorRoutes');
+const caboRoutes = require('./routes/caboRoutes');
 
 const app = express();
 
 app.use(bodyParser.json());
 
-// Middleware de debug para visualizar as requisições recebidas
+// DEBUGANDO REQ APLICAÇÂO
 app.use((req, res, next) => {
   console.log(`Received ${req.method} request for ${req.url}`);
   console.log('Headers:', req.headers);
@@ -23,18 +35,33 @@ app.use((req, res, next) => {
   next();
 });
 
+// ROTAS
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api/estacoes', estacaoRoutes);
 app.use('/api/arcondicionado', arcondicionadoRoutes);
 app.use('/api/disjuntor', disjuntorRoutes);
 app.use('/api/dps', dpsRoutes);
+app.use('/api/antena', antenaRoutes);
+app.use('/api/combinador', combinadorRoutes);
+app.use('/api/exaustor', exaustorRoutes);
+app.use('/api/nobreak', nobreakRoutes);
+app.use('/api/parabolica', parabolicaRoutes);
+app.use('/api/quadro', quadroRoutes);
+app.use('/api/receptor', receptorRoutes);
+app.use('/api/switch', switchRoutes);
+app.use('/api/telemetria', telemetriaRoutes);
+app.use('/api/torre', torreRoutes);
+app.use('/api/transmissor', transmissorRoutes);
+app.use('/api/cabo', caboRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.sync().then(async() => {
+sequelize.sync({ alter: true }).then(async () => {
   await createRoles();
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
+}).catch(error => {
+  console.error('Unable to sync database:', error);
 });

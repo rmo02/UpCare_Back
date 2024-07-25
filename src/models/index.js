@@ -15,24 +15,18 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// Definir uma ordem específica para carregar os modelos
-const modelsOrder = ['Estacao', 'Transmissor', 'Receptor', 'Antena'];
-
-modelsOrder.forEach(modelName => {
-  const model = require(path.join(__dirname, modelName))(sequelize, Sequelize.DataTypes);
-  db[model.name] = model;
-});
-
+// Importa os modelos
 fs
   .readdirSync(__dirname)
   .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js') && !modelsOrder.includes(file.replace('.js', ''));
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 
+// Define associações
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
@@ -41,5 +35,67 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+async function syncModel(model, transaction) {
+  try {
+    await model.sync({ alter: true, transaction });
+    console.log(`Synchronized ${model.name} successfully`);
+  } catch (error) {
+    console.error(`Error synchronizing ${model.name}:`, error);
+    throw error;
+  }
+}
+
+async function syncDatabase() {
+  const modelsToSync = [
+    db.Estacao,
+    db.Quadro,
+    db.Transmissor,
+    db.Parabolica,
+    db.Antena,
+    db.Receptor,
+    db.Arcondicionado,
+    db.Cabo,
+    db.Combinador,
+    db.Disjuntor,
+    db.Dps,
+    db.Exaustor,
+    db.Nobreak,
+    db.Switch,
+    db.Telemetria,
+    db.Torre,
+    db.Checklist,
+    db.Tarefa,
+    db.Manutencao
+  ];
+
+  // Divida os modelos em grupos menores
+  const groups = [];
+  while (modelsToSync.length) {
+    groups.push(modelsToSync.splice(0, 2)); // Grupos de 2 modelos
+  }
+
+  for (const group of groups) {
+    const transaction = await sequelize.transaction();
+    try {
+      for (const model of group) {
+        await syncModel(model, transaction);
+      }
+      await transaction.commit();
+      console.log('Group synchronized successfully');
+    } catch (error) {
+      await transaction.rollback();
+      console.error('Error synchronizing group:', error);
+      throw error;
+    }
+
+    // Introduza um delay entre as sincronizações dos grupos
+    await new Promise(resolve => setTimeout(resolve, 2500)); // 2500ms delay
+  }
+
+  console.log('Database synchronized successfully!');
+}
+
+syncDatabase();
 
 module.exports = db;

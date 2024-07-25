@@ -70,6 +70,8 @@ module.exports = (sequelize) => {
       type: DataTypes.DATE,
       allowNull: false,
     }
+  }, {
+    timestamps: true
   });
 
   Antena.associate = function(models) {
