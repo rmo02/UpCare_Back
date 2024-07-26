@@ -22,6 +22,8 @@ const telemetriaRoutes = require('./routes/telemetriaRoutes');
 const torreRoutes = require('./routes/torreRoutes');
 const transmissorRoutes = require('./routes/transmissorRoutes');
 const caboRoutes = require('./routes/caboRoutes');
+const checklistRoutes = require('./routes/checklistRoutes');
+const manutencaoRoutes = require('./routes/manutencaoRoutes');
 
 const app = express();
 
@@ -54,6 +56,8 @@ app.use('/api/telemetria', telemetriaRoutes);
 app.use('/api/torre', torreRoutes);
 app.use('/api/transmissor', transmissorRoutes);
 app.use('/api/cabo', caboRoutes);
+app.use('/api/checklist', checklistRoutes);
+app.use('/api/manutencao', manutencaoRoutes);
 
 const PORT = process.env.PORT || 3000;
 

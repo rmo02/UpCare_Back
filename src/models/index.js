@@ -66,7 +66,8 @@ async function syncDatabase() {
     db.Torre,
     db.Checklist,
     db.Tarefa,
-    db.Manutencao
+    db.Manutencao,
+    db.ManutencaoChecklists
   ];
 
   // Divida os modelos em grupos menores

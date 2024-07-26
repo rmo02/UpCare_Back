@@ -26,8 +26,12 @@ module.exports = (sequelize) => {
         },
     });
 
-    Checklist.associate = function (models) {
+    Checklist.associate = function(models) {
         Checklist.hasMany(models.Tarefa, { foreignKey: 'checklistId' });
+        Checklist.belongsToMany(models.Manutencao, {
+          through: 'ManutencaoChecklists',
+          foreignKey: 'checklistId'
+        });
     };
 
     return Checklist;

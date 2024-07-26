@@ -1,4 +1,4 @@
-const { Estacao, Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor } = require('../models');
+const { Estacao, Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor, Manutencao, Checklist, Tarefa } = require('../models');
 
 // Create a new Estacao
 exports.createEstacao = async (req, res) => {
@@ -16,7 +16,7 @@ exports.getAllEstacoes = async (req, res) => {
   try {
     const estacoes = await Estacao.findAll({
       include: [
-        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor
+        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor, Manutencao
       ]
     });
     res.status(200).json(estacoes);
@@ -31,7 +31,15 @@ exports.getEstacaoById = async (req, res) => {
   try {
     const estacao = await Estacao.findByPk(id, {
       include: [
-        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor
+        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor, {
+          model: Manutencao,
+          include: {
+            model: Checklist,
+            include: {
+              model: Tarefa
+            }
+          }
+        }
       ]
     });
     if (!estacao) {
