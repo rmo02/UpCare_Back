@@ -28,6 +28,7 @@ const manutencaoRoutes = require('./routes/manutencaoRoutes');
 const app = express();
 
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
 
 // DEBUGANDO REQ APLICAÇÂO
 app.use((req, res, next) => {
