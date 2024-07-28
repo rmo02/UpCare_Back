@@ -30,6 +30,10 @@ const upload = multer({
         fileSize: 1024 * 1024 * 40, // Limitando os arquivos até 50MB
         files: 3 // Limitando até três arquivos por requisição
     }
-}).any(); // Captura todos os arquivos enviados na requisição
+}).fields([
+    { name: 'files1', maxCount: 1 },
+    { name: 'files2', maxCount: 1 },
+    { name: 'files3', maxCount: 1 },
+])
 
 module.exports = upload;

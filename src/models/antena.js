@@ -77,6 +77,7 @@ module.exports = (sequelize) => {
   Antena.associate = function(models) {
     Antena.belongsTo(models.Transmissor, { foreignKey: 'transmissorId' });
     Antena.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+    Antena.hasMany(models.File, { foreignKey: 'antenaId' });
   };
 
   return Antena;
