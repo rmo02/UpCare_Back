@@ -44,6 +44,8 @@ module.exports = (sequelize, DataTypes) => {
 
     Switch.associate = function(models) {
         Switch.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+        Switch.hasMany(models.File, { foreignKey: 'switchId' });
+
     };
 
     return Switch;

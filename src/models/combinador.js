@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Combinador.associate = function(models) {
         Combinador.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+        Combinador.hasMany(models.File, { foreignKey: 'combinadorId' });
     };
 
     return Combinador;

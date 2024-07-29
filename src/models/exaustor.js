@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Exaustor.associate = function(models) {
         Exaustor.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+        Exaustor.hasMany(models.File, { foreignKey: 'exaustorId' });
     };
 
     return Exaustor;

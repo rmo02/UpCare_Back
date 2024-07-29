@@ -49,6 +49,8 @@ module.exports = (sequelize) => {
       
         Arcondicionado.associate = function(models) {
           Arcondicionado.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+          Arcondicionado.belongsTo(models.File, { foreignKey: 'arcondicionadoId' });
+
         };
 
     return Arcondicionado;

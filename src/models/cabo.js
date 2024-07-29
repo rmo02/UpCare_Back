@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Cabo.associate = function(models) {
         Cabo.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+        Cabo.hasMany(models.File, { foreignKey: 'caboId' });
     };
 
     return Cabo;

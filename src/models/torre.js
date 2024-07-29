@@ -54,6 +54,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Torre.associate = function(models) {
     Torre.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+    Torre.hasMany(models.File, { foreignKey: 'torreId' });
+
   };
 
   return Torre;

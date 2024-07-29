@@ -65,6 +65,8 @@ module.exports = (sequelize) => {
     Transmissor.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Transmissor.hasMany(models.Receptor, { foreignKey: 'transmissorId' });
     Transmissor.hasOne(models.Antena, { foreignKey: 'transmissorId' });
+    Transmissor.hasMany(models.File, { foreignKey: 'transmissorId' });
+
   };
 
   return Transmissor;

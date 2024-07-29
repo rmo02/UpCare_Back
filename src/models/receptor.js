@@ -73,6 +73,8 @@ module.exports = (sequelize) => {
     Receptor.belongsTo(models.Parabolica, { foreignKey: 'parabolicaId' });
     Receptor.belongsTo(models.Transmissor, { foreignKey: 'transmissorId' });
     Receptor.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+    Receptor.hasMany(models.File, { foreignKey: 'receptorId' });
+
   };
 
   return Receptor;

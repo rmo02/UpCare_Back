@@ -50,6 +50,7 @@ module.exports = (sequelize) => {
   Parabolica.associate = function(models) {
     Parabolica.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Parabolica.hasMany(models.Receptor, { foreignKey: 'parabolicaId' });
+    Parabolica.hasMany(models.File, { foreignKey: 'parabolicaId' });
   };
 
   return Parabolica;

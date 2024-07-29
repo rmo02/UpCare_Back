@@ -30,6 +30,7 @@ module.exports = (sequelize) => {
     Quadro.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Quadro.hasMany(models.Disjuntor, { foreignKey: 'quadroId' });
     Quadro.hasMany(models.Dps, { foreignKey: 'quadroId' });
+    Quadro.hasMany(models.File, { foreignKey: 'quadroId' });
   };
 
   return Quadro;

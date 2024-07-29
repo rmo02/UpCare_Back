@@ -40,6 +40,8 @@ module.exports = (sequelize, DataTypes) => {
 
     Telemetria.associate = function(models) {
         Telemetria.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+        Telemetria.hasMany(models.File, { foreignKey: 'telemetriaId' });
+
     };
 
     return Telemetria;

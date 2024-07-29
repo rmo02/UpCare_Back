@@ -6,7 +6,7 @@ const { verifyToken } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 // Rotas para antena
-router.post('/',verifyToken,upload, antenaController.createAntena);
+router.post('/',verifyToken, antenaController.createAntena);
 router.get('/', verifyToken,antenaController.getAllAntenas);
 router.get('/:id',verifyToken,antenaController.getAntenaById);
 router.put('/:id',verifyToken, upload, antenaController.updateAntena);

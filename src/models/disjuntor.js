@@ -53,6 +53,7 @@ module.exports = (sequelize) => {
   Disjuntor.associate = function(models) {
     Disjuntor.belongsTo(models.Quadro, { foreignKey: 'quadroId' });
     Disjuntor.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+    Disjuntor.hasMany(models.File, { foreignKey: 'disjuntorId' });
   };
 
   return Disjuntor;

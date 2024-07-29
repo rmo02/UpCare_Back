@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     Estacao.hasMany(models.Parabolica, { foreignKey: 'estacaoId' });
     Estacao.hasMany(models.Antena, { foreignKey: 'estacaoId' });
     Estacao.hasMany(models.Manutencao, { foreignKey: 'estacaoId' });
+    Estacao.hasMany(models.File, { foreignKey: 'estacaoId' });
   };
 
   return Estacao;

@@ -57,6 +57,7 @@ module.exports = (sequelize) => {
   Nobreak.associate = function(models) {
     Nobreak.belongsTo(models.Quadro, { foreignKey: 'quadroId' });
     Nobreak.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+    Nobreak.hasMany(models.File, { foreignKey: 'nobreakId' });
   };
 
   return Nobreak;
