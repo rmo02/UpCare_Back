@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { sequelize } = require('./models');
 
 // IMPORT ROTAS
@@ -26,6 +27,13 @@ const checklistRoutes = require('./routes/checklistRoutes');
 const manutencaoRoutes = require('./routes/manutencaoRoutes');
 
 const app = express();
+
+// Configure o CORS
+app.use(cors({
+  origin: 'http://localhost:3001', // Permite apenas solicitações desse domínio
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Permite esses métodos HTTP
+  allowedHeaders: ['Content-Type', 'Authorization'] // Permite esses cabeçalhos
+}));
 
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));

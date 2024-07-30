@@ -30,14 +30,32 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ 
+      where: { email },
+      include: [{ model: Role, as: 'roles' }]
+    });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const token = generateToken(user.id);
-    res.status(200).json({ token });
+
+    // Get user roles
+    const roles = user.roles.map(role => role.name);
+
+    // Extract user data to return in response
+    const userData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      contato: user.contato,
+      empresa: user.empresa,
+      contato_empresa: user.contato_empresa,
+      roles
+    };
+
+    res.status(200).json({ token, user: userData });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

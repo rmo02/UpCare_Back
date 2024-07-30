@@ -1,4 +1,6 @@
 const { Quadro, Estacao, File } = require('../models');
+const path = require('path');
+
 
 // Criar um novo Quadro
 exports.createQuadro = async (req, res) => {
@@ -23,7 +25,7 @@ exports.createQuadro = async (req, res) => {
 exports.getAllQuadros = async (req, res) => {
   try {
     const quadros = await Quadro.findAll({
-      include: [Estacao]
+      include: [Estacao, File]
     });
     return res.status(200).json(quadros);
   } catch (error) {
@@ -38,7 +40,7 @@ exports.getQuadroById = async (req, res) => {
     const { id } = req.params;
 
     const quadro = await Quadro.findByPk(id, {
-      include: [Estacao]
+      include: [Estacao, File]
     });
     if (!quadro) {
       return res.status(404).json({ error: 'Quadro não encontrado.' });
