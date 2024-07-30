@@ -1,4 +1,4 @@
-const { Dps, Quadro, Estacao } = require('../models');
+const { Dps, Quadro, Estacao, File } = require('../models');
 
 // Criar um novo Dps
 exports.createDps = async (req, res) => {
@@ -71,7 +71,7 @@ exports.updateDps = async (req, res) => {
       return res.status(404).json({ error: 'Dps não encontrado.' });
     }
 
-    await disjuntor.update({
+    await dps.update({
       codigo,
       marca,
       modelo,
@@ -81,6 +81,33 @@ exports.updateDps = async (req, res) => {
       quadroId,
       estacaoId
     });
+
+    await File.destroy({ where: { dpsId: dps.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              dpsId: dps.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
+
 
     return res.status(200).json(dps);
   } catch (error) {

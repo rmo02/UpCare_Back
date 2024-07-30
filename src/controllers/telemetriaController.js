@@ -1,4 +1,4 @@
-const { Telemetria, Estacao } = require('../models');
+const { Telemetria, Estacao, File } = require('../models');
 
 // Criar um novo Telemetria
 exports.createTelemetria = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateTelemetria = async (req, res) => {
     }
 
     await telemetria.update({ codigo, marca, modelo, categoria, status, estacaoId });
+
+    // Remover arquivos existentes
+    await File.destroy({ where: { telemetriaId: telemetria.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              telemetriaId: telemetria.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
 
     return res.status(200).json(telemetria);
   } catch (error) {

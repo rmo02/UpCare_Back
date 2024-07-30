@@ -1,4 +1,4 @@
-const { Transmissor, Estacao, Receptor, Antena } = require('../models');
+const { Transmissor, Estacao, Receptor, Antena, File } = require('../models');
 
 // Criar um novo Transmissor
 exports.createTransmissor = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateTransmissor = async (req, res) => {
     }
 
     await transmissor.update({ codigo, marca, modelo, categoria, status, programmed, canal_fisico, canal_virtual, acoplador_one, acoplador_two, estacaoId });
+
+    // Remover arquivos existentes
+    await File.destroy({ where: { transmissorId: transmissor.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              transmissorId: transmissor.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
 
     return res.status(200).json(transmissor);
   } catch (error) {

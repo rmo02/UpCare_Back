@@ -1,4 +1,4 @@
-const { Parabolica, Estacao, Receptor } = require('../models');
+const { Parabolica, Estacao, Receptor, File } = require('../models');
 
 // Criar uma nova Parabólica
 exports.createParabolica = async (req, res) => {
@@ -44,6 +44,8 @@ exports.getParabolicaById = async (req, res) => {
       return res.status(404).json({ error: 'Parabólica não encontrada.' });
     }
 
+
+
     return res.status(200).json(parabolica);
   } catch (error) {
     console.error('Erro ao obter Parabólica:', error);
@@ -63,6 +65,33 @@ exports.updateParabolica = async (req, res) => {
     }
 
     await parabolica.update({ codigo, marca, modelo, categoria, status, diametro, satelite, estacaoId });
+
+    await File.destroy({ where: { parabolicaId: parabolica.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              parabolicaId: parabolica.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
+
 
     return res.status(200).json(parabolica);
   } catch (error) {

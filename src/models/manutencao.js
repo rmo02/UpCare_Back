@@ -23,18 +23,12 @@ module.exports = (sequelize) => {
     status: {
       type: StatusManutencaoEnum,
       allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
+    }
+  }, {
+    timestamps: true,
   });
 
-  Manutencao.associate = function(models) {
+  Manutencao.associate = function (models) {
     Manutencao.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Manutencao.belongsToMany(models.Checklist, {
       through: 'ManutencaoChecklists',

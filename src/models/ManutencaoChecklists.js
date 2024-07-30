@@ -18,6 +18,8 @@ module.exports = (sequelize) => {
       },
       allowNull: false,
     },
+  }, {
+    timestamps: true,
   });
 
   return ManutencaoChecklists;

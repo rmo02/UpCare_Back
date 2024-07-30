@@ -41,13 +41,15 @@ module.exports = (sequelize, DataTypes) => {
         estacaoId: {
             type: DataTypes.UUID,
             references: {
-              model: 'Estacaos',
-              key: 'id',
+                model: 'Estacaos',
+                key: 'id',
             },
         },
+    }, {
+        timestamps: true,
     });
 
-    Cabo.associate = function(models) {
+    Cabo.associate = function (models) {
         Cabo.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
         Cabo.hasMany(models.File, { foreignKey: 'caboId' });
     };

@@ -1,4 +1,4 @@
-const { Quadro, Estacao } = require('../models');
+const { Quadro, Estacao, File } = require('../models');
 
 // Criar um novo Quadro
 exports.createQuadro = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateQuadro = async (req, res) => {
     }
 
     await quadro.update({ codigo, categoria, estacaoId });
+
+    // Remover arquivos existentes
+    await File.destroy({ where: { quadroId: quadro.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              quadroId: quadro.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
 
     return res.status(200).json(quadro);
   } catch (error) {

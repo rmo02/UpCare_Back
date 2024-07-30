@@ -61,14 +61,6 @@ module.exports = (sequelize) => {
         model: 'Estacaos',
         key: 'id',
       },
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
     }
   }, {
     timestamps: true

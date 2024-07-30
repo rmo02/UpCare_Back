@@ -48,9 +48,11 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+  }, {
+    timestamps: true,
   });
 
-  Disjuntor.associate = function(models) {
+  Disjuntor.associate = function (models) {
     Disjuntor.belongsTo(models.Quadro, { foreignKey: 'quadroId' });
     Disjuntor.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Disjuntor.hasMany(models.File, { foreignKey: 'disjuntorId' });

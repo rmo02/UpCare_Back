@@ -1,4 +1,4 @@
-const { Switch, Estacao } = require('../models');
+const { Switch, Estacao, File } = require('../models');
 
 // Criar um novo Switch
 exports.createSwitch = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateSwitch = async (req, res) => {
     }
 
     await switchInstance.update({ codigo, marca, modelo, categoria, status, qtd_portas, estacaoId });
+
+    await File.destroy({ where: { switchId: switchInstance.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              switchId: switchInstance.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
+
 
     return res.status(200).json(switchInstance);
   } catch (error) {

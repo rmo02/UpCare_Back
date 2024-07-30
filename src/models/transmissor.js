@@ -58,7 +58,8 @@ module.exports = (sequelize) => {
       },
     },
   }, {
-    tableName: 'Transmissores'
+    tableName: 'Transmissores',
+    timestamps: true,
   });
 
   Transmissor.associate = function(models) {

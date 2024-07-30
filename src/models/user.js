@@ -32,9 +32,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+  }, {
+    timestamps: true
   });
 
-  User.associate = function(models) {
+  User.associate = function (models) {
     User.belongsToMany(models.Role, {
       through: 'UserRoles',
       as: 'roles',
@@ -48,3 +50,4 @@ module.exports = (sequelize, DataTypes) => {
 
   return User;
 };
+

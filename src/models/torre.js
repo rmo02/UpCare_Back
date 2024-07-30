@@ -50,9 +50,11 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id',
       },
     },
+  }, {
+    timestamps: true,
   });
 
-  Torre.associate = function(models) {
+  Torre.associate = function (models) {
     Torre.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Torre.hasMany(models.File, { foreignKey: 'torreId' });
 

@@ -49,9 +49,11 @@ module.exports = (sequelize) => {
                 key: 'id'
             }
         }
+    }, {
+        timestamps: true,
     });
-    
-    Dps.associate = function(models) {
+
+    Dps.associate = function (models) {
         Dps.belongsTo(models.Quadro, { foreignKey: 'quadroId' });
         Dps.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
         Dps.hasMany(models.File, { foreignKey: 'dpsId' });

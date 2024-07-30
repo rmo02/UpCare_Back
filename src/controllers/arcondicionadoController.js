@@ -1,4 +1,5 @@
-const { Arcondicionado, Estacao } = require('../models');
+const { Arcondicionado, Estacao, File } = require('../models');
+const path = require('path');
 
 // Criar um novo ar-condicionado
 exports.createArcondicionado = async (req, res) => {
@@ -38,7 +39,7 @@ exports.createArcondicionado = async (req, res) => {
 exports.getAllArcondicionados = async (req, res) => {
   try {
     const arcondicionados = await Arcondicionado.findAll({
-      include: [Estacao] // Inclui estação associada
+      include: [Estacao, File]
     });
     return res.status(200).json(arcondicionados);
   } catch (error) {
@@ -77,6 +78,7 @@ exports.updateArcondicionado = async (req, res) => {
       return res.status(404).json({ error: 'Ar-condicionado não encontrado.' });
     }
 
+    // Atualize os campos de dados do ar-condicionado
     await arcondicionado.update({
       codigo,
       marca,
@@ -87,6 +89,33 @@ exports.updateArcondicionado = async (req, res) => {
       tensao,
       estacaoId
     });
+
+    // Remover arquivos existentes
+    await File.destroy({ where: { arcondicionadoId: arcondicionado.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              arcondicionadoId: arcondicionado.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
 
     return res.status(200).json(arcondicionado);
   } catch (error) {

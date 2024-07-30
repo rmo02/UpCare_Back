@@ -32,13 +32,15 @@ module.exports = (sequelize, DataTypes) => {
         estacaoId: {
             type: DataTypes.UUID,
             references: {
-              model: 'Estacaos',
-              key: 'id',
+                model: 'Estacaos',
+                key: 'id',
             },
         },
+    }, {
+        timestamps: true,
     });
 
-    Combinador.associate = function(models) {
+    Combinador.associate = function (models) {
         Combinador.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
         Combinador.hasMany(models.File, { foreignKey: 'combinadorId' });
     };

@@ -67,9 +67,11 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+  }, {
+    timestamps: true,
   });
 
-  Receptor.associate = function(models) {
+  Receptor.associate = function (models) {
     Receptor.belongsTo(models.Parabolica, { foreignKey: 'parabolicaId' });
     Receptor.belongsTo(models.Transmissor, { foreignKey: 'transmissorId' });
     Receptor.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });

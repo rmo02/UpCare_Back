@@ -1,5 +1,5 @@
 const express = require('express');
-const upload = require('../middlewares/multer')
+const upload = require('../middlewares/multer');
 const antenaController = require('../controllers/antenaController');
 const { verifyToken } = require('../middlewares/authMiddleware');
 

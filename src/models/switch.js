@@ -40,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
               key: 'id',
             },
         },
+    }, {
+        tableName: 'switches',
+        timestamps: true,
     });
 
     Switch.associate = function(models) {

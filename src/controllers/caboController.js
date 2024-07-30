@@ -1,4 +1,4 @@
-const { Cabo, Estacao } = require('../models');
+const { Cabo, Estacao, File } = require('../models');
 
 // Criar um novo Cabo
 exports.createCabo = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateCabo = async (req, res) => {
     }
 
     await cabo.update({ codigo, marca, modelo, categoria, status, tipos_cabo, tamanho, estacaoId });
+
+    await File.destroy({ where: { caboId: cabo.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              caboId: cabo.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
+
 
     return res.status(200).json(cabo);
   } catch (error) {

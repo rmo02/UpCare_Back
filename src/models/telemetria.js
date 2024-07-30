@@ -32,13 +32,15 @@ module.exports = (sequelize, DataTypes) => {
         estacaoId: {
             type: DataTypes.UUID,
             references: {
-              model: 'Estacaos',
-              key: 'id',
+                model: 'Estacaos',
+                key: 'id',
             },
         },
+    }, {
+        timestamps: true,
     });
 
-    Telemetria.associate = function(models) {
+    Telemetria.associate = function (models) {
         Telemetria.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
         Telemetria.hasMany(models.File, { foreignKey: 'telemetriaId' });
 

@@ -16,21 +16,15 @@ module.exports = (sequelize) => {
             type: TypeEquipamentoEnum,
             allowNull: false,
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
+    }, {
+        timestamps: true,
     });
 
-    Checklist.associate = function(models) {
+    Checklist.associate = function (models) {
         Checklist.hasMany(models.Tarefa, { foreignKey: 'checklistId' });
         Checklist.belongsToMany(models.Manutencao, {
-          through: 'ManutencaoChecklists',
-          foreignKey: 'checklistId'
+            through: 'ManutencaoChecklists',
+            foreignKey: 'checklistId'
         });
     };
 

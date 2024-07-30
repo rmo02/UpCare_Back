@@ -45,9 +45,11 @@ module.exports = (sequelize) => {
         key: 'id',
       },
     },
+  }, {
+    timestamps: true,
   });
 
-  Parabolica.associate = function(models) {
+  Parabolica.associate = function (models) {
     Parabolica.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
     Parabolica.hasMany(models.Receptor, { foreignKey: 'parabolicaId' });
     Parabolica.hasMany(models.File, { foreignKey: 'parabolicaId' });

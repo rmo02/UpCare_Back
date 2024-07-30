@@ -41,17 +41,19 @@ module.exports = (sequelize) => {
         estacaoId: {
             type: DataTypes.UUID,
             references: {
-              model: 'Estacaos',
-              key: 'id',
+                model: 'Estacaos',
+                key: 'id',
             },
-          },
-        });
-      
-        Arcondicionado.associate = function(models) {
-          Arcondicionado.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
-          Arcondicionado.belongsTo(models.File, { foreignKey: 'arcondicionadoId' });
+        },
+    }, {
+        timestamps: true,
+    });
 
-        };
+    Arcondicionado.associate = function (models) {
+        Arcondicionado.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+        Arcondicionado.hasMany(models.File, { foreignKey: 'arcondicionadoId' });
+
+    };
 
     return Arcondicionado;
 };

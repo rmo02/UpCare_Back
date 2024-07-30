@@ -36,66 +36,52 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-async function syncModel(model, transaction) {
-  try {
-    await model.sync({ alter: true, transaction });
-    console.log(`Synchronized ${model.name} successfully`);
-  } catch (error) {
-    console.error(`Error synchronizing ${model.name}:`, error);
-    throw error;
+async function syncModel(model, attempts = 5, delay = 2000) {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      await model.sync();
+      console.log(`Synchronized ${model.name} successfully`);
+      break;
+    } catch (error) {
+      if (i === attempts - 1) {
+        console.error(`Error synchronizing ${model.name} after ${attempts} attempts:`, error);
+        throw error;
+      }
+      console.warn(`Attempt ${i + 1} to synchronize ${model.name} failed. Retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
 }
 
 async function syncDatabase() {
-  const modelsToSync = [
-    db.Estacao,
-    db.Quadro,
-    db.Transmissor,
-    db.Parabolica,
-    db.Antena,
-    db.Receptor,
-    db.Arcondicionado,
-    db.Cabo,
-    db.Combinador,
-    db.Disjuntor,
-    db.Dps,
-    db.Exaustor,
-    db.Nobreak,
-    db.Switch,
-    db.Telemetria,
-    db.Torre,
-    db.Checklist,
-    db.Tarefa,
-    db.Manutencao,
-    db.ManutencaoChecklists,
-    db.File
-  ];
+  try {
+    // Sincroniza os modelos de forma sequencial, respeitando as dependências
+    await syncModel(db.Antena);
+    await syncModel(db.Arcondicionado);
+    await syncModel(db.Torre);
+    await syncModel(db.Quadro);
+    await syncModel(db.Checklist);
+    await syncModel(db.Tarefa);
+    await syncModel(db.Manutencao);
+    await syncModel(db.ManutencaoChecklists);
+    await syncModel(db.Cabo);
+    await syncModel(db.Combinador);
+    await syncModel(db.Disjuntor);
+    await syncModel(db.Estacao);
+    await syncModel(db.Dps);
+    await syncModel(db.Exaustor);
+    await syncModel(db.Nobreak);
+    await syncModel(db.Telemetria);
+    await syncModel(db.Transmissor);
+    await syncModel(db.Parabolica);
+    await syncModel(db.Receptor);
+    await syncModel(db.Switch);
+    await syncModel(db.File);
 
-  // Divida os modelos em grupos menores
-  const groups = [];
-  while (modelsToSync.length) {
-    groups.push(modelsToSync.splice(0, 2)); // Grupos de 2 modelos
+    console.log('Database synchronized successfully!');
+  } catch (error) {
+    console.error('Error synchronizing database:', error);
   }
-
-  for (const group of groups) {
-    const transaction = await sequelize.transaction();
-    try {
-      for (const model of group) {
-        await syncModel(model, transaction);
-      }
-      await transaction.commit();
-      console.log('Group synchronized successfully');
-    } catch (error) {
-      await transaction.rollback();
-      console.error('Error synchronizing group:', error);
-      throw error;
-    }
-
-    // Introduza um delay entre as sincronizações dos grupos
-    await new Promise(resolve => setTimeout(resolve, 2500)); // 2500ms delay
-  }
-
-  console.log('Database synchronized successfully!');
 }
 
 syncDatabase();

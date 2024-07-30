@@ -1,4 +1,4 @@
-const { Exaustor, Estacao } = require('../models');
+const { Exaustor, Estacao, File } = require('../models');
 
 // Criar um novo Exaustor
 exports.createExaustor = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateExaustor = async (req, res) => {
     }
 
     await exaustor.update({ codigo, marca, modelo, categoria, status, estacaoId });
+
+    await File.destroy({ where: { exaustorId: exaustor.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              exaustorId: exaustor.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
+
 
     return res.status(200).json(exaustor);
   } catch (error) {

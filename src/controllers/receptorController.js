@@ -1,4 +1,4 @@
-const { Receptor, Estacao, Parabolica, Transmissor } = require('../models');
+const { Receptor, Estacao, Parabolica, Transmissor, File } = require('../models');
 
 // Criar um novo Receptor
 exports.createReceptor = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateReceptor = async (req, res) => {
     }
 
     await receptor.update({ codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, vr, parabolicaId, transmissorId, estacaoId });
+
+    // Remover arquivos existentes
+    await File.destroy({ where: { receptorId: receptor.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              receptorId: receptor.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
 
     return res.status(200).json(receptor);
   } catch (error) {

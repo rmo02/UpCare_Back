@@ -1,4 +1,4 @@
-const { Nobreak, Quadro, Estacao } = require('../models');
+const { Nobreak, Quadro, Estacao, File } = require('../models');
 
 // Criar um novo Nobreak
 exports.createNobreak = async (req, res) => {
@@ -63,6 +63,33 @@ exports.updateNobreak = async (req, res) => {
     }
 
     await nobreak.update({ codigo, marca, modelo, categoria, status, tensao_entrada, tensao_saida, quadroId, estacaoId });
+
+    await File.destroy({ where: { nobreakId: nobreak.id } });
+
+    // Processar e armazenar novos arquivos
+    if (req.files) {
+      const fileFields = ['files1', 'files2', 'files3'];
+      let fileCount = 0;
+
+      for (const field of fileFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filePath = path.join('uploads', file.filename);
+
+          if (fileCount < 3) {
+            await File.create({
+              filename: file.filename,
+              mimetype: file.mimetype,
+              size: file.size,
+              url: filePath,
+              nobreakId: nobreak.id
+            });
+            fileCount++;
+          }
+        }
+      }
+    }
+
 
     return res.status(200).json(nobreak);
   } catch (error) {

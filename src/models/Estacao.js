@@ -31,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       type: StatusEnum,
       allowNull: false,
     },
+  }, {
+    timestamps: true,
   });
 
   Estacao.associate = function(models) {
