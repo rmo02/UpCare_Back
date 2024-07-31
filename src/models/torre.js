@@ -1,7 +1,8 @@
 const { TypeCategoriaEnum } = require('./enums/TypeCategoria');
 const { TypeAterramentoEnum } = require('./enums/TypeAterramento');
-const { TypePositionTorreEnum } = require('./enums/TypePositionTorre');
+const { TypePositionTorreEnum, TypePositionTorre } = require('./enums/TypePositionTorre');
 const { StatusEnum } = require('./enums/Status');
+const { TypeTorreEnum } = require('./enums/TypeTorre');
 
 module.exports = (sequelize, DataTypes) => {
   const Torre = sequelize.define('Torre', {
@@ -32,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     tipos_torre: {
-      type: TypePositionTorreEnum,
+      type: TypeTorreEnum,
       allowNull: false,
     },
     aterramento: {

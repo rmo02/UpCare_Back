@@ -3,10 +3,10 @@ const { Receptor, Estacao, Parabolica, Transmissor, File } = require('../models'
 // Criar um novo Receptor
 exports.createReceptor = async (req, res) => {
   try {
-    const { codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, vr, parabolicaId, transmissorId, estacaoId } = req.body;
+    const { codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, parabolicaId, transmissorId, estacaoId } = req.body;
 
     // Validar entrada
-    if (!codigo || !marca || !modelo || !categoria || !status || !channel || !frequencia || !symbol_rate || !vr) {
+    if (!codigo || !marca || !modelo || !categoria || !status || !channel || !frequencia || !symbol_rate) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
 
@@ -55,14 +55,14 @@ exports.getReceptorById = async (req, res) => {
 exports.updateReceptor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, vr, parabolicaId, transmissorId, estacaoId } = req.body;
+    const { codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, parabolicaId, transmissorId, estacaoId } = req.body;
 
     const receptor = await Receptor.findByPk(id);
     if (!receptor) {
       return res.status(404).json({ error: 'Receptor não encontrado.' });
     }
 
-    await receptor.update({ codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, vr, parabolicaId, transmissorId, estacaoId });
+    await receptor.update({ codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, parabolicaId, transmissorId, estacaoId });
 
     // Remover arquivos existentes
     await File.destroy({ where: { receptorId: receptor.id } });

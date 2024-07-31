@@ -42,10 +42,6 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    vr: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     parabolicaId: {
       type: DataTypes.UUID,
       references: {
