@@ -15,9 +15,9 @@ exports.createEstacao = async (req, res) => {
 exports.getAllEstacoes = async (req, res) => {
   try {
     const estacoes = await Estacao.findAll({
-      include: [
-        Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor, Manutencao
-      ]
+      // include: [
+      //   Arcondicionado, Antena, Cabo, Combinador, Disjuntor, Dps, Exaustor, Nobreak, Parabolica, Quadro, Receptor, Switch, Telemetria, Torre, Transmissor, Manutencao
+      // ]
     });
     res.status(200).json(estacoes);
   } catch (error) {

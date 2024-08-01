@@ -24,6 +24,7 @@ const torreRoutes = require('./routes/torreRoutes');
 const transmissorRoutes = require('./routes/transmissorRoutes');
 const caboRoutes = require('./routes/caboRoutes');
 const checklistRoutes = require('./routes/checklistRoutes');
+const equipamentosRoutes = require('./routes/equipamentosRoutes');
 const manutencaoRoutes = require('./routes/manutencaoRoutes');
 
 const app = express();
@@ -67,6 +68,7 @@ app.use('/api/transmissor', transmissorRoutes);
 app.use('/api/cabo', caboRoutes);
 app.use('/api/checklist', checklistRoutes);
 app.use('/api/manutencao', manutencaoRoutes);
+app.use('/api/equipamentos', equipamentosRoutes);
 
 const PORT = process.env.PORT || 3000;
 

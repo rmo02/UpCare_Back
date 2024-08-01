@@ -4,14 +4,14 @@ const path = require('path');
 // Criar um novo Antena com upload de arquivos
 exports.createAntena = async (req, res) => {
   try {
-    const { codigo, marca, modelo, categoria, status, gain, tipos_antena, position_torre, vr, transmissorId, estacaoId } = req.body;
+    const { codigo, marca, modelo, categoria, status, gain, tipos_antena, position_torre, vr } = req.body;
 
     // Validar entrada
     if (!codigo || !marca || !modelo || !categoria || !status || !gain || !tipos_antena || !position_torre || !vr) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
 
-    const antena = await Antena.create({ codigo, marca, modelo, categoria, status, gain, tipos_antena, position_torre, vr, transmissorId, estacaoId });
+    const antena = await Antena.create({ codigo, marca, modelo, categoria, status, gain, tipos_antena, position_torre, vr });
 
     return res.status(201).json(antena);
   } catch (error) {

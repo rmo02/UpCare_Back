@@ -3,7 +3,7 @@ const { Dps, Quadro, Estacao, File } = require('../models');
 // Criar um novo Dps
 exports.createDps = async (req, res) => {
   try {
-    const { codigo, marca, modelo, categoria, status, classe_dps, quadroId, estacaoId } = req.body;
+    const { codigo, marca, modelo, categoria, status, classe_dps, estacaoId } = req.body;
 
     // Validar entrada
     if (!codigo || !marca || !modelo || !categoria || !status || classe_dps === undefined) {
@@ -17,7 +17,6 @@ exports.createDps = async (req, res) => {
       categoria,
       status,
       classe_dps,
-      quadroId,
       estacaoId
     });
 
@@ -31,9 +30,7 @@ exports.createDps = async (req, res) => {
 // Obter todos os Dps
 exports.getAllDps = async (req, res) => {
   try {
-    const dps = await Dps.findAll({
-      include: [Quadro, Estacao]
-    });
+    const dps = await Dps.findAll({});
     return res.status(200).json(dps);
   } catch (error) {
     console.error('Erro ao obter Dps:', error);

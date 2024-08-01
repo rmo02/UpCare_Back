@@ -24,9 +24,7 @@ exports.createQuadro = async (req, res) => {
 // Obter todos os Quadros
 exports.getAllQuadros = async (req, res) => {
   try {
-    const quadros = await Quadro.findAll({
-      include: [Estacao, File]
-    });
+    const quadros = await Quadro.findAll({});
     return res.status(200).json(quadros);
   } catch (error) {
     console.error('Erro ao obter Quadros:', error);

@@ -3,14 +3,14 @@ const { Nobreak, Quadro, Estacao, File } = require('../models');
 // Criar um novo Nobreak
 exports.createNobreak = async (req, res) => {
   try {
-    const { codigo, marca, modelo, categoria, status, tensao_entrada, tensao_saida, quadroId, estacaoId } = req.body;
+    const { codigo, marca, modelo, categoria, status, tensao_entrada, tensao_saida, } = req.body;
 
     // Validar entrada
     if (!codigo || !marca || !modelo || !categoria || !status || !tensao_entrada || !tensao_saida) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
 
-    const nobreak = await Nobreak.create({ codigo, marca, modelo, categoria, status, tensao_entrada, tensao_saida, quadroId, estacaoId });
+    const nobreak = await Nobreak.create({ codigo, marca, modelo, categoria, status, tensao_entrada, tensao_saida });
 
     return res.status(201).json(nobreak);
   } catch (error) {
@@ -23,7 +23,7 @@ exports.createNobreak = async (req, res) => {
 exports.getAllNobreaks = async (req, res) => {
   try {
     const nobreaks = await Nobreak.findAll({
-      include: [Quadro, Estacao]
+      include: [Quadro]
     });
     return res.status(200).json(nobreaks);
   } catch (error) {

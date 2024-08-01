@@ -32,7 +32,7 @@ exports.createDisjuntor = async (req, res) => {
 exports.getAllDisjuntores = async (req, res) => {
   try {
     const disjuntores = await Disjuntor.findAll({
-      include: [Quadro, Estacao]
+      include: [Quadro]
     });
     return res.status(200).json(disjuntores);
   } catch (error) {
