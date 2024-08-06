@@ -1,4 +1,4 @@
-const { Manutencao, ManutencaoChecklists, Checklist, Tarefa, EquipamentoChecklists } = require('../models');
+const { Manutencao, Dps, ManutencaoChecklists, Checklist, Tarefa, EquipamentoChecklists } = require('../models');
 
 exports.createManutencao = async (req, res) => {
   const { estacaoId, checklists, data, status, tecnicoId, tipomanutencao } = req.body;
@@ -53,18 +53,27 @@ exports.createManutencao = async (req, res) => {
 exports.getAllManutencoes = async (req, res) => {
   try {
     const manutencoes = await Manutencao.findAll({
-      include: {
-        model: Checklist,
-        include: {
-          model: Tarefa,
+      include: [
+        {
+          model: Checklist,
+          include: [
+            {
+              model: Tarefa,
+            },
+            {
+              model: Dps, // Assumindo que Dps é o seu modelo de equipamento
+              through: { attributes: [] } // Para não incluir atributos da tabela de junção
+            }
+          ],
         },
-      },
+      ],
     });
     res.status(200).json(manutencoes);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getManutencaoById = async (req, res) => {
   const { id } = req.params;

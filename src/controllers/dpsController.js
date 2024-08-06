@@ -1,4 +1,4 @@
-const { Dps, Quadro, Estacao, File } = require('../models');
+const { Dps, Quadro, Estacao, Manutencao, Checklist, Tarefa } = require('../models');
 
 // Criar um novo Dps
 exports.createDps = async (req, res) => {
@@ -44,8 +44,27 @@ exports.getDpsById = async (req, res) => {
     const { id } = req.params;
 
     const dps = await Dps.findByPk(id, {
-      include: [Quadro, Estacao]
+      include: [
+        {
+          model: Quadro
+        },
+        {
+          model: Estacao,
+          include: {
+            model: Manutencao,
+            include: [
+              {
+                model: Checklist,
+                include: {
+                  model: Tarefa
+                }
+              }
+            ]
+          }
+        }
+      ]
     });
+
     if (!dps) {
       return res.status(404).json({ error: 'Dps não encontrado.' });
     }
