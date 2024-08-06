@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
         tipoEquipamento: {
             type: TypeEquipamentoEnum,
             allowNull: false,
-        }
+        },
     }, {
         timestamps: true,
     });
@@ -26,6 +26,13 @@ module.exports = (sequelize) => {
             through: 'ManutencaoChecklists',
             foreignKey: 'checklistId'
         });
+        Checklist.belongsToMany(models.Dps, {
+            through: 'EquipamentoChecklists',
+            foreignKey: 'checklistId',
+            otherKey: 'equipamentoId',
+        });
+
+        
     };
 
     return Checklist;

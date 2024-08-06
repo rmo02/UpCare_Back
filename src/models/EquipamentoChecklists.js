@@ -1,13 +1,9 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  const ManutencaoChecklists = sequelize.define('ManutencaoChecklists', {
-    manutencaoId: {
+  const EquipamentoChecklists = sequelize.define('EquipamentoChecklists', {
+    equipamentoId: {
       type: DataTypes.UUID,
-      references: {
-        model: 'Manutencaos',
-        key: 'id',
-      },
       allowNull: false,
     },
     checklistId: {
@@ -22,7 +18,5 @@ module.exports = (sequelize) => {
     timestamps: true,
   });
 
-  
-
-  return ManutencaoChecklists;
+  return EquipamentoChecklists;
 };

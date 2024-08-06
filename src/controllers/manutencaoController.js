@@ -1,10 +1,10 @@
-const { Manutencao, ManutencaoChecklists, Checklist, Tarefa } = require('../models');
+const { Manutencao, ManutencaoChecklists, Checklist, Tarefa, EquipamentoChecklists } = require('../models');
 
 exports.createManutencao = async (req, res) => {
-  const { estacaoId, checklists, data, status } = req.body;
+  const { estacaoId, checklists, data, status, tecnicoId, tipomanutencao } = req.body;
 
   try {
-    console.log('Recebendo dados:', { estacaoId, checklists, data, status });
+    console.log('Recebendo dados:', { estacaoId, checklists, data, status, tecnicoId, tipomanutencao });
 
     // Verifique se checklists é um array e não é nulo
     if (!Array.isArray(checklists)) {
@@ -14,15 +14,17 @@ exports.createManutencao = async (req, res) => {
     // Criação da manutenção
     const manutencao = await Manutencao.create({
       estacaoId,
+      tecnicoId,
       data,
-      status
+      status,
+      tipomanutencao
     });
 
     console.log('Manutenção criada:', manutencao);
 
-    // Criação das associações com checklists
+    // Criação das associações com checklists e equipamentos
     if (checklists.length > 0) {
-      const manutencaoChecklists = checklists.map(checklistId => ({
+      const manutencaoChecklists = checklists.map(({ checklistId, equipamentoId }) => ({
         manutencaoId: manutencao.id,
         checklistId
       }));
@@ -30,6 +32,15 @@ exports.createManutencao = async (req, res) => {
       console.log('Associações de Manutenção e Checklists:', manutencaoChecklists);
 
       await ManutencaoChecklists.bulkCreate(manutencaoChecklists);
+
+      const equipamentoChecklists = checklists.map(({ checklistId, equipamentoId }) => ({
+        equipamentoId,
+        checklistId
+      }));
+
+      console.log('Associações de Equipamento e Checklists:', equipamentoChecklists);
+
+      await EquipamentoChecklists.bulkCreate(equipamentoChecklists);
     }
 
     res.status(201).json(manutencao);
@@ -72,13 +83,13 @@ exports.getManutencaoById = async (req, res) => {
     }
     res.status(200).json(manutencao);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status (500).json({ error: error.message });
   }
 };
 
 exports.updateManutencao = async (req, res) => {
   const { id } = req.params;
-  const { estacaoId, checklistIds, data, status } = req.body;
+  const { estacaoId, checklists, data, status, tecnicoId, tipomanutencao } = req.body;
 
   try {
     const manutencao = await Manutencao.findByPk(id);
@@ -88,18 +99,29 @@ exports.updateManutencao = async (req, res) => {
 
     // Atualizar os dados da manutenção
     manutencao.estacaoId = estacaoId;
+    manutencao.tecnicoId = tecnicoId;
     manutencao.data = data;
-    manutencao.status = status; // Corrigido para 'status'
+    manutencao.status = status;
+    manutencao.tipomanutencao = tipomanutencao;
     await manutencao.save();
 
     // Atualizar checklists associados
     await ManutencaoChecklists.destroy({ where: { manutencaoId: id } }); // Remover associações antigas
-    const checklistAssociations = checklistIds.map(checklistId => ({
+    const manutencaoChecklists = checklists.map(({ checklistId }) => ({
       manutencaoId: manutencao.id,
       checklistId,
     }));
 
-    await ManutencaoChecklists.bulkCreate(checklistAssociations);
+    await ManutencaoChecklists.bulkCreate(manutencaoChecklists);
+
+    // Atualizar associações dos equipamentos
+    await EquipamentoChecklists.destroy({ where: { checklistId: checklists.map(c => c.checklistId) } });
+    const equipamentoChecklists = checklists.map(({ checklistId, equipamentoId }) => ({
+      equipamentoId,
+      checklistId,
+    }));
+
+    await EquipamentoChecklists.bulkCreate(equipamentoChecklists);
 
     res.status(200).json(manutencao);
   } catch (error) {

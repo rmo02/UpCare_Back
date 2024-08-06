@@ -57,6 +57,11 @@ module.exports = (sequelize) => {
         Dps.belongsTo(models.Quadro, { foreignKey: 'quadroId' });
         Dps.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
         Dps.hasMany(models.File, { foreignKey: 'dpsId' });
+        Dps.belongsToMany(models.Checklist, {
+            through: 'EquipamentoChecklists',
+            foreignKey: 'equipamentoId',
+            otherKey: 'checklistId',
+          });
     };
 
     return Dps;

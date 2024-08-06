@@ -17,7 +17,7 @@ module.exports = (sequelize) => {
       },
       allowNull: false,
     },
-    tecnicoId: {
+        tecnicoId: {
       type: DataTypes.UUID,
       references: {
         model: 'Users',
@@ -44,10 +44,14 @@ module.exports = (sequelize) => {
 
   Manutencao.associate = function (models) {
     Manutencao.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
-    Manutencao.belongsTo(models.User, { foreignKey: 'tecnicoId', as: 'tecnico' });
     Manutencao.belongsToMany(models.Checklist, {
       through: 'ManutencaoChecklists',
       foreignKey: 'manutencaoId'
+    });
+    Manutencao.belongsToMany(models.Dps, {
+      through: 'EquipamentoChecklists',
+      foreignKey: 'manutencaoId',
+      otherKey: 'equipamentoId',
     });
   };
 
