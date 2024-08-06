@@ -3,14 +3,14 @@ const { Receptor, Estacao, Parabolica, Transmissor, File } = require('../models'
 // Criar um novo Receptor
 exports.createReceptor = async (req, res) => {
   try {
-    const { codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, parabolicaId, transmissorId, estacaoId } = req.body;
+    const { codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate } = req.body;
 
     // Validar entrada
     if (!codigo || !marca || !modelo || !categoria || !status || !channel || !frequencia || !symbol_rate) {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
 
-    const receptor = await Receptor.create({ codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate, vr, parabolicaId, transmissorId, estacaoId });
+    const receptor = await Receptor.create({ codigo, marca, modelo, categoria, status, channel, frequencia, symbol_rate });
 
     return res.status(201).json(receptor);
   } catch (error) {

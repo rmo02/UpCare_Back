@@ -7,6 +7,10 @@ module.exports = (sequelize) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    verificado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     descricao: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -33,7 +37,7 @@ module.exports = (sequelize) => {
     },
   });
 
-  Tarefa.associate = function(models) {
+  Tarefa.associate = function (models) {
     Tarefa.belongsTo(models.Checklist, { foreignKey: 'checklistId' });
   };
 

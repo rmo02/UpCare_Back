@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
         tipoEquipamento: {
             type: TypeEquipamentoEnum,
             allowNull: false,
-        },
+        }
     }, {
         timestamps: true,
     });

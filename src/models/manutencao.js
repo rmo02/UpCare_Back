@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { StatusManutencaoEnum } = require('./enums/StatusManutencao');
+const { TypeManutencaoEnum } = require('./enums/TypeManutencao');
 
 module.exports = (sequelize) => {
   const Manutencao = sequelize.define('Manutencao', {
@@ -16,12 +17,25 @@ module.exports = (sequelize) => {
       },
       allowNull: false,
     },
+    tecnicoId: {
+      type: DataTypes.UUID,
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
+      allowNull: false,
+    },
     data: {
       type: DataTypes.DATE,
       allowNull: false,
     },
     status: {
       type: StatusManutencaoEnum,
+      defaultValue: "AGENDADA",
+      allowNull: false,
+    },
+    tipomanutencao: {
+      type: TypeManutencaoEnum,
       allowNull: false,
     }
   }, {
@@ -30,6 +44,7 @@ module.exports = (sequelize) => {
 
   Manutencao.associate = function (models) {
     Manutencao.belongsTo(models.Estacao, { foreignKey: 'estacaoId' });
+    Manutencao.belongsTo(models.User, { foreignKey: 'tecnicoId', as: 'tecnico' });
     Manutencao.belongsToMany(models.Checklist, {
       through: 'ManutencaoChecklists',
       foreignKey: 'manutencaoId'

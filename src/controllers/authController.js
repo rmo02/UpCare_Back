@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { User, Role } = require('../models');
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
 exports.register = async (req, res) => {
